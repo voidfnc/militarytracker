@@ -17,8 +17,7 @@ Our goal is to provide a modern, responsive dashboard for conflict monitoring, m
 
 ## Screenshots
 
-![Military Tracker Screenshot](docs/screenshot-dark.png)  
-![Military Tracker Light Theme](docs/screenshot-light.png)
+
 
 ## Planned Features
 
