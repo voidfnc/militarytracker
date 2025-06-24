@@ -1,0 +1,1697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+  <title>Military Tracker Dashboard</title>
+  <meta name="description" content="Military Tracker Dashboard: Live global defense visualization, analytics, cyber and AI news, aircraft tracking, and more.">
+  <!-- Modern fonts: Sora (heading/UI), Inter (body) and JetBrains Mono (code/mono) -->
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <style>
+    :root {
+      /* New sleek color palette */
+      --deep-space: #0a0e17;
+      --cosmic-blue: #0f172a;
+      --stellar-surface: #1e293b;
+      --nebula-edge: #334155;
+      --quantum-accent: #3b82f6;
+      --plasma-accent: #6366f1;
+      --fusion-gradient: linear-gradient(135deg, var(--quantum-accent) 0%, var(--plasma-accent) 100%);
+      --supernova: #f59e0b;
+      --cyber-green: #10b981;
+      --quantum-red: #ef4444;
+      --hologram-teal: #06b6d4;
+      --starlight: #e2e8f0;
+      --moon-dust: #94a3b8;
+      --dark-matter: #020617;
+      
+      /* UI Variables */
+      --radius-3d: 12px;
+      --radius-card: 16px;
+      --radius-pill: 999px;
+      --shadow-sm: 0 1px 3px rgba(2, 6, 23, 0.1);
+      --shadow-md: 0 4px 6px rgba(2, 6, 23, 0.1);
+      --shadow-lg: 0 10px 15px rgba(2, 6, 23, 0.1);
+      --shadow-xl: 0 20px 25px rgba(2, 6, 23, 0.1);
+      --shadow-accent: 0 0 20px rgba(59, 130, 246, 0.3);
+      --glass-bg: rgba(15, 23, 42, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.08);
+      --transition-smooth: cubic-bezier(0.65, 0, 0.35, 1);
+      --transition-bounce: cubic-bezier(0.68, -0.6, 0.32, 1.6);
+      
+      /* Light mode variables */
+      --light-bg: #f8fafc;
+      --light-surface: #ffffff;
+      --light-surface2: #f1f5f9;
+      --light-text: #0f172a;
+      --light-muted: #64748b;
+      --light-border: #e2e8f0;
+    }
+
+    /* --- Base & Reset --- */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    html {
+      scroll-behavior: smooth;
+      scroll-padding-top: 80px;
+    }
+    
+    body {
+      min-height: 100vh;
+      background: var(--deep-space);
+      color: var(--starlight);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    
+    /* --- Typography --- */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Sora', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.5em;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+      letter-spacing: -0.01em;
+    }
+    
+    h3 {
+      font-size: 1.5rem;
+    }
+    
+    p {
+      margin-bottom: 1em;
+    }
+    
+    a {
+      color: var(--quantum-accent);
+      text-decoration: none;
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    a:hover {
+      color: var(--plasma-accent);
+    }
+    
+    /* --- Animations --- */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    @keyframes glow {
+      0% { box-shadow: 0 0 10px rgba(59, 130, 246, 0); }
+      50% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+      100% { box-shadow: 0 0 10px rgba(59, 130, 246, 0); }
+    }
+    
+    @keyframes hologram {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    /* --- Preloader --- */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--deep-space);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+    
+    #preloader.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+    
+    .preloader-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+    
+    .preloader-logo {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--starlight);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .preloader-spinner {
+      width: 60px;
+      height: 60px;
+      position: relative;
+    }
+    
+    .preloader-spinner::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid transparent;
+      border-top-color: var(--quantum-accent);
+      border-bottom-color: var(--plasma-accent);
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* --- Navbar --- */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 1rem 0;
+      z-index: 1000;
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    .navbar.scrolled {
+      padding: 0.5rem 0;
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .navbar-brand {
+      font-family: 'Sora', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--starlight);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .navbar-brand span {
+      font-size: 0.8rem;
+      background: var(--fusion-gradient);
+      color: var(--dark-matter);
+      padding: 0.25rem 0.75rem;
+      border-radius: var(--radius-pill);
+      font-weight: 700;
+    }
+    
+    .navbar-nav .nav-link {
+      font-family: 'Sora', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--moon-dust);
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius-pill);
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    .navbar-nav .nav-link:hover,
+    .navbar-nav .nav-link.active {
+      color: var(--starlight);
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .navbar-nav .nav-link.active {
+      font-weight: 700;
+    }
+    
+    .theme-toggle-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(59, 130, 246, 0.1);
+      border: 1px solid var(--glass-border);
+      color: var(--quantum-accent);
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    .theme-toggle-btn:hover {
+      background: rgba(59, 130, 246, 0.2);
+      transform: rotate(30deg);
+    }
+    
+    /* --- Dashboard Header --- */
+    .dashboard-header {
+      padding: 7rem 2rem 3rem;
+      background: linear-gradient(135deg, var(--cosmic-blue) 0%, var(--deep-space) 100%);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 2rem;
+    }
+    
+    .dashboard-header::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(59, 130, 246, 0.1) 0%, transparent 70%);
+      animation: float 15s infinite var(--transition-smooth);
+    }
+    
+    .dashboard-header::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%' height='100%' filter='url(%23noiseFilter)' opacity='0.1'/%3E%3C/svg%3E");
+      pointer-events: none;
+    }
+    
+    .dashboard-title {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(to right, var(--starlight), var(--quantum-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+      animation: slideIn 0.8s var(--transition-smooth) both;
+    }
+    
+    .dashboard-subtitle {
+      font-size: 1.25rem;
+      color: var(--moon-dust);
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+      position: relative;
+      z-index: 1;
+      animation: slideIn 0.8s var(--transition-smooth) 0.1s both;
+    }
+    
+    .header-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--fusion-gradient);
+      color: var(--dark-matter);
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      text-decoration: none;
+      transition: all 0.3s var(--transition-smooth);
+      position: relative;
+      z-index: 1;
+      animation: slideIn 0.8s var(--transition-smooth) 0.2s both;
+    }
+    
+    .header-cta:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-accent);
+    }
+    
+    /* --- Dashboard Grid --- */
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1.5rem;
+      padding: 0 2rem 3rem;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    
+    .sidebar {
+      grid-column: span 3;
+    }
+    
+    .main-content {
+      grid-column: span 6;
+    }
+    
+    .right-sidebar {
+      grid-column: span 3;
+    }
+    
+    .widget {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--glass-border);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    .widget:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--quantum-accent);
+    }
+    
+    .widget-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .widget-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--starlight);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .widget-title svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+    
+    /* --- Stat Cards --- */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, var(--stellar-surface) 0%, var(--cosmic-blue) 100%);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.3s var(--transition-smooth);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+    }
+    
+    .stat-card:hover::before {
+      opacity: 1;
+    }
+    
+    .stat-label {
+      font-size: 0.875rem;
+      color: var(--moon-dust);
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+    }
+    
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--starlight);
+      margin-bottom: 0.5rem;
+      line-height: 1;
+    }
+    
+    .stat-change {
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .stat-up {
+      color: var(--cyber-green);
+    }
+    
+    .stat-down {
+      color: var(--quantum-red);
+    }
+    
+    .stat-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      opacity: 0.1;
+      font-size: 2.5rem;
+    }
+    
+    /* --- Feature Cards --- */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-card {
+      background: var(--stellar-surface);
+      border-radius: var(--radius-card);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s var(--transition-smooth);
+      border: 1px solid var(--nebula-edge);
+    }
+    
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--quantum-accent);
+      background: linear-gradient(135deg, var(--stellar-surface) 0%, var(--cosmic-blue) 100%);
+    }
+    
+    .feature-icon {
+      width: 3rem;
+      height: 3rem;
+      background: rgba(59, 130, 246, 0.1);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      color: var(--quantum-accent);
+      font-size: 1.5rem;
+    }
+    
+    .feature-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--starlight);
+      margin-bottom: 0.5rem;
+    }
+    
+    .feature-desc {
+      font-size: 0.875rem;
+      color: var(--moon-dust);
+      margin-bottom: 1rem;
+    }
+    
+    .feature-link {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--quantum-accent);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: auto;
+    }
+    
+    .feature-link svg {
+      width: 1rem;
+      height: 1rem;
+      transition: transform 0.3s var(--transition-smooth);
+    }
+    
+    .feature-card:hover .feature-link svg {
+      transform: translateX(3px);
+    }
+    
+    /* --- News Carousel --- */
+    .news-carousel {
+      display: flex;
+      gap: 1rem;
+      overflow-x: auto;
+      padding-bottom: 1rem;
+      scroll-snap-type: x mandatory;
+    }
+    
+    .news-carousel::-webkit-scrollbar {
+      height: 6px;
+    }
+    
+    .news-carousel::-webkit-scrollbar-track {
+      background: var(--stellar-surface);
+      border-radius: 10px;
+    }
+    
+    .news-carousel::-webkit-scrollbar-thumb {
+      background: var(--quantum-accent);
+      border-radius: 10px;
+    }
+    
+    .news-card {
+      min-width: 280px;
+      scroll-snap-align: start;
+      background: var(--stellar-surface);
+      border-radius: var(--radius-card);
+      overflow: hidden;
+      transition: all 0.3s var(--transition-smooth);
+      border: 1px solid var(--nebula-edge);
+    }
+    
+    .news-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-lg);
+      border-color: var(--quantum-accent);
+    }
+    
+    .news-image {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    
+    .news-content {
+      padding: 1.25rem;
+    }
+    
+    .news-date {
+      font-size: 0.75rem;
+      color: var(--moon-dust);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    .news-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--starlight);
+      margin-bottom: 0.5rem;
+      line-height: 1.4;
+    }
+    
+    .news-excerpt {
+      font-size: 0.875rem;
+      color: var(--moon-dust);
+      margin-bottom: 1rem;
+    }
+    
+    .news-link {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--quantum-accent);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    
+    /* --- Trends Widget --- */
+    .trend-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--nebula-edge);
+    }
+    
+    .trend-item:last-child {
+      border-bottom: none;
+    }
+    
+    .trend-rank {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--quantum-accent);
+      background: rgba(59, 130, 246, 0.1);
+      width: 1.75rem;
+      height: 1.75rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    
+    .trend-content {
+      flex: 1;
+    }
+    
+    .trend-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--starlight);
+      margin-bottom: 0.25rem;
+    }
+    
+    .trend-meta {
+      font-size: 0.75rem;
+      color: var(--moon-dust);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .trend-hashtag {
+      color: var(--quantum-accent);
+      font-weight: 500;
+    }
+    
+    /* --- Poll Widget --- */
+    .poll-question {
+      font-size: 1.125rem;
+      font-weight: 600;
+      color: var(--starlight);
+      margin-bottom: 1.5rem;
+    }
+    
+    .poll-option {
+      margin-bottom: 1rem;
+    }
+    
+    .poll-option input[type="radio"] {
+      display: none;
+    }
+    
+    .poll-option label {
+      display: block;
+      padding: 0.75rem 1rem;
+      background: var(--stellar-surface);
+      border: 1px solid var(--nebula-edge);
+      border-radius: var(--radius-3d);
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .poll-option label::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 100%;
+      background: var(--fusion-gradient);
+      transition: width 0.3s var(--transition-smooth);
+      z-index: 0;
+    }
+    
+    .poll-option label span {
+      position: relative;
+      z-index: 1;
+    }
+    
+    .poll-option input[type="radio"]:checked + label {
+      color: var(--dark-matter);
+      border-color: var(--quantum-accent);
+    }
+    
+    .poll-option input[type="radio"]:checked + label::before {
+      width: 100%;
+    }
+    
+    .poll-option input[type="radio"]:checked + label .poll-percent {
+      color: var(--dark-matter);
+    }
+    
+    .poll-option:hover label {
+      border-color: var(--quantum-accent);
+    }
+    
+    .poll-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.5rem;
+    }
+    
+    .poll-percent {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--quantum-accent);
+    }
+    
+    .poll-votes {
+      font-size: 0.75rem;
+      color: var(--moon-dust);
+    }
+    
+    .poll-submit {
+      width: 100%;
+      padding: 0.75rem;
+      background: var(--fusion-gradient);
+      color: var(--dark-matter);
+      border: none;
+      border-radius: var(--radius-3d);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s var(--transition-smooth);
+      margin-top: 1rem;
+    }
+    
+    .poll-submit:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-accent);
+    }
+    
+    /* --- Footer --- */
+    .footer {
+      background: var(--cosmic-blue);
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--nebula-edge);
+    }
+    
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      max-width: 1440px;
+      margin: 0 auto;
+    }
+    
+    .footer-logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--starlight);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .footer-about {
+      font-size: 0.875rem;
+      color: var(--moon-dust);
+      margin-bottom: 1.5rem;
+    }
+    
+    .footer-social {
+      display: flex;
+      gap: 1rem;
+    }
+    
+    .footer-social a {
+      width: 2.5rem;
+      height: 2.5rem;
+      background: var(--stellar-surface);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--starlight);
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    .footer-social a:hover {
+      background: var(--quantum-accent);
+      transform: translateY(-3px);
+    }
+    
+    .footer-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--starlight);
+      margin-bottom: 1.25rem;
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 0.75rem;
+    }
+    
+    .footer-links a {
+      font-size: 0.875rem;
+      color: var(--moon-dust);
+      transition: all 0.3s var(--transition-smooth);
+    }
+    
+    .footer-links a:hover {
+      color: var(--quantum-accent);
+      padding-left: 0.25rem;
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      margin-top: 2rem;
+      border-top: 1px solid var(--nebula-edge);
+      font-size: 0.875rem;
+      color: var(--moon-dust);
+    }
+    
+    /* --- Light Mode --- */
+    .theme-light body {
+      background: var(--light-bg);
+      color: var(--light-text);
+    }
+    
+    .theme-light .navbar {
+      background: rgba(248, 250, 252, 0.8);
+      border-bottom: 1px solid var(--light-border);
+    }
+    
+    .theme-light .navbar-brand {
+      color: var(--light-text);
+    }
+    
+    .theme-light .navbar-nav .nav-link {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .navbar-nav .nav-link:hover,
+    .theme-light .navbar-nav .nav-link.active {
+      color: var(--light-text);
+      background: rgba(59, 130, 246, 0.1);
+    }
+    
+    .theme-light .dashboard-header {
+      background: linear-gradient(135deg, var(--light-surface2) 0%, var(--light-bg) 100%);
+    }
+    
+    .theme-light .dashboard-title {
+      background: linear-gradient(to right, var(--light-text), var(--quantum-accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .theme-light .dashboard-subtitle {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .widget {
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--light-border);
+    }
+    
+    .theme-light .widget-title {
+      color: var(--light-text);
+    }
+    
+    .theme-light .stat-card {
+      background: linear-gradient(135deg, var(--light-surface) 0%, var(--light-surface2) 100%);
+    }
+    
+    .theme-light .stat-label {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .stat-value {
+      color: var(--light-text);
+    }
+    
+    .theme-light .feature-card {
+      background: var(--light-surface);
+      border: 1px solid var(--light-border);
+    }
+    
+    .theme-light .feature-title {
+      color: var(--light-text);
+    }
+    
+    .theme-light .feature-desc {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .news-card {
+      background: var(--light-surface);
+      border: 1px solid var(--light-border);
+    }
+    
+    .theme-light .news-date {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .news-title {
+      color: var(--light-text);
+    }
+    
+    .theme-light .news-excerpt {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .trend-item {
+      border-bottom: 1px solid var(--light-border);
+    }
+    
+    .theme-light .trend-title {
+      color: var(--light-text);
+    }
+    
+    .theme-light .trend-meta {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .poll-question {
+      color: var(--light-text);
+    }
+    
+    .theme-light .poll-option label {
+      background: var(--light-surface);
+      border: 1px solid var(--light-border);
+    }
+    
+    .theme-light .footer {
+      background: var(--light-surface2);
+      border-top: 1px solid var(--light-border);
+    }
+    
+    .theme-light .footer-logo {
+      color: var(--light-text);
+    }
+    
+    .theme-light .footer-about {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .footer-social a {
+      background: var(--light-surface);
+      color: var(--light-text);
+    }
+    
+    .theme-light .footer-title {
+      color: var(--light-text);
+    }
+    
+    .theme-light .footer-links a {
+      color: var(--light-muted);
+    }
+    
+    .theme-light .footer-bottom {
+      border-top: 1px solid var(--light-border);
+      color: var(--light-muted);
+    }
+    
+    /* --- Responsive --- */
+    @media (max-width: 1200px) {
+      .sidebar, .right-sidebar {
+        grid-column: span 4;
+      }
+      
+      .main-content {
+        grid-column: span 8;
+      }
+    }
+    
+    @media (max-width: 992px) {
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar, .main-content, .right-sidebar {
+        grid-column: span 1;
+      }
+      
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .dashboard-header {
+        padding: 6rem 1.5rem 2rem;
+      }
+      
+      .dashboard-title {
+        font-size: 2rem;
+      }
+      
+      .dashboard-subtitle {
+        font-size: 1rem;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .dashboard-header {
+        padding: 5rem 1rem 1.5rem;
+      }
+      
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    /* --- Utility Classes --- */
+    .animate-delay-1 {
+      animation-delay: 0.1s;
+    }
+    
+    .animate-delay-2 {
+      animation-delay: 0.2s;
+    }
+    
+    .animate-delay-3 {
+      animation-delay: 0.3s;
+    }
+    
+    .animate-delay-4 {
+      animation-delay: 0.4s;
+    }
+    
+    .animate-delay-5 {
+      animation-delay: 0.5s;
+    }
+    
+    .animate-delay-6 {
+      animation-delay: 0.6s;
+    }
+    
+    .animate-delay-7 {
+      animation-delay: 0.7s;
+    }
+    
+    .animate-delay-8 {
+      animation-delay: 0.8s;
+    }
+    
+    .animate-delay-9 {
+      animation-delay: 0.9s;
+    }
+    
+    .animate-delay-10 {
+      animation-delay: 1s;
+    }
+  </style>
+</head>
+<body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="preloader-inner">
+      <div class="preloader-logo">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L3 7L12 12L21 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 12L12 17L21 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 17L12 22L21 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Military Tracker
+      </div>
+      <div class="preloader-spinner"></div>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2L3 7L12 12L21 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 12L12 17L21 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 17L12 22L21 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Military Tracker <span>DASHBOARD</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Dashboard</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">News</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Radar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Trends</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Polls</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <button class="theme-toggle-btn" id="theme-toggle-btn">
+              <svg id="theme-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+                <path d="M12 2V4M12 20V2M4 12H2m20 0h-2M6.343 6.343L5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+            </button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Dashboard Header -->
+  <header class="dashboard-header">
+    <div class="container">
+      <h1 class="dashboard-title animate__animated animate__fadeInDown">Military Tracker Dashboard</h1>
+      <p class="dashboard-subtitle animate__animated animate__fadeInDown animate__delay-1s">Real-Time Insights: Military Activity, Cybersecurity, AI, Trends & More</p>
+      <a href="#" class="header-cta animate__animated animate__fadeInDown animate__delay-2s">
+        Explore Live Data
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <!-- Dashboard Grid -->
+  <div class="dashboard-grid">
+    <!-- Left Sidebar -->
+    <aside class="sidebar">
+      <!-- Trends Widget -->
+      <div class="widget animate__animated animate__fadeInLeft">
+        <div class="widget-header">
+          <h3 class="widget-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22 12H18L15 21L9 3L6 12H2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Trending Topics
+          </h3>
+        </div>
+        <div class="trends-list">
+          <div class="trend-item">
+            <div class="trend-rank">1</div>
+            <div class="trend-content">
+              <h4 class="trend-title">AI in Cyber Defense</h4>
+              <div class="trend-meta">
+                <span class="trend-hashtag">#CyberSecurity</span>
+                <span>2.4K posts</span>
+              </div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-rank">2</div>
+            <div class="trend-content">
+              <h4 class="trend-title">Drone Surveillance</h4>
+              <div class="trend-meta">
+                <span class="trend-hashtag">#MilitaryTech</span>
+                <span>1.8K posts</span>
+              </div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-rank">3</div>
+            <div class="trend-content">
+              <h4 class="trend-title">South Sea Tensions</h4>
+              <div class="trend-meta">
+                <span class="trend-hashtag">#Geopolitics</span>
+                <span>1.5K posts</span>
+              </div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-rank">4</div>
+            <div class="trend-content">
+              <h4 class="trend-title">NATO Exercises</h4>
+              <div class="trend-meta">
+                <span class="trend-hashtag">#DefenseNews</span>
+                <span>1.2K posts</span>
+              </div>
+            </div>
+          </div>
+          <div class="trend-item">
+            <div class="trend-rank">5</div>
+            <div class="trend-content">
+              <h4 class="trend-title">Quantum Encryption</h4>
+              <div class="trend-meta">
+                <span class="trend-hashtag">#TechTrends</span>
+                <span>980 posts</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Stats Widget -->
+      <div class="widget animate__animated animate__fadeIn">
+        <div class="widget-header">
+          <h3 class="widget-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M21 21H6.2C5.07989 21 4.51984 21 4.09202 20.782C3.71569 20.5903 3.40973 20.2843 3.21799 19.908C3 19.4802 3 18.9201 3 17.8V3M21 7L15 13L11 9L7 13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Live Stats
+          </h3>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card animate__animated animate__fadeIn animate-delay-1">
+            <div class="stat-label">Active Conflict Zones</div>
+            <div class="stat-value">12</div>
+            <div class="stat-change stat-up">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              +2 today
+            </div>
+            <div class="stat-icon">🌍</div>
+          </div>
+          <div class="stat-card animate__animated animate__fadeIn animate-delay-2">
+            <div class="stat-label">Tracked Aircraft</div>
+            <div class="stat-value">209</div>
+            <div class="stat-change stat-up">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              +14
+            </div>
+            <div class="stat-icon">✈️</div>
+          </div>
+          <div class="stat-card animate__animated animate__fadeIn animate-delay-3">
+            <div class="stat-label">Cyber Incidents (24h)</div>
+            <div class="stat-value">37</div>
+            <div class="stat-change stat-down">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 5V19M19 12L12 19L5 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              -6
+            </div>
+            <div class="stat-icon">💻</div>
+          </div>
+          <div class="stat-card animate__animated animate__fadeIn animate-delay-4">
+            <div class="stat-label">AI-Driven Reports</div>
+            <div class="stat-value">5</div>
+            <div class="stat-change stat-up">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 19V5M5 12L12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              +1
+            </div>
+            <div class="stat-icon">🤖</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Widget -->
+      <div class="widget animate__animated animate__fadeIn animate-delay-2">
+        <div class="widget-header">
+          <h3 class="widget-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2L3 7L12 12L21 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 12L12 17L21 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M3 17L12 22L21 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Dashboard Tools
+          </h3>
+        </div>
+        <div class="features-grid">
+          <div class="feature-card animate__animated animate__fadeIn animate-delay-3">
+            <div class="feature-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 17L4 12L9 7M15 7L20 12L15 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h4 class="feature-title">Live Conflict Maps</h4>
+            <p class="feature-desc">Visualize ongoing military hotspots and border disputes worldwide, in real-time.</p>
+            <a href="#" class="feature-link">
+              Explore
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+          <div class="feature-card animate__animated animate__fadeIn animate-delay-4">
+            <div class="feature-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 19L12 5M12 5L5 12M12 5L19 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h4 class="feature-title">Military Aircraft Tracker</h4>
+            <p class="feature-desc">Follow the skies: see global military aircraft movement as it happens.</p>
+            <a href="#" class="feature-link">
+              Explore
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+          <div class="feature-card animate__animated animate__fadeIn animate-delay-5">
+            <div class="feature-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M12 16V12M12 8H12.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h4 class="feature-title">Cybersecurity & AI Defense</h4>
+            <p class="feature-desc">Monitor major cyber incidents and AI-driven defense breakthroughs, updated constantly.</p>
+            <a href="#" class="feature-link">
+              Explore
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+          <div class="feature-card animate__animated animate__fadeIn animate-delay-6">
+            <div class="feature-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 6.65685 16.3431 8 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6 15C7.65685 15 9 13.6569 9 12C9 10.3431 7.65685 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M18 22C19.6569 22 21 20.6569 21 19C21 17.3431 19.6569 16 18 16C16.3431 16 15 17.3431 15 19C15 20.6569 16.3431 22 18 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M8.58984 13.51L15.4198 17.49M15.4098 6.51L8.58984 10.49" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <h4 class="feature-title">Trends & Social Analytics</h4>
+            <p class="feature-desc">Track viral topics, sentiment, and breaking news across defense and cyber domains.</p>
+            <a href="#" class="feature-link">
+              Explore
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- News Widget -->
+      <div class="widget animate__animated animate__fadeIn animate-delay-3">
+        <div class="widget-header">
+          <h3 class="widget-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3H15L21 9V19C21 20.1046 20.1046 21 19 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M17 21V13H7V21" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M7 3V9H13" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Featured News & Events
+          </h3>
+        </div>
+        <div class="news-carousel">
+          <div class="news-card animate__animated animate__fadeIn animate-delay-4">
+            <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80" alt="Drones Over Border" class="news-image">
+            <div class="news-content">
+              <div class="news-date">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.0799 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Today, 10:45 AM
+              </div>
+              <h4 class="news-title">Drones Over Border: Latest Movements</h4>
+              <p class="news-excerpt">New drone surveillance detected in the Northern border region triggers heightened military response.</p>
+              <a href="#" class="news-link">
+                Read more
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="news-card animate__animated animate__fadeIn animate-delay-5">
+            <img src="https://images.unsplash.com/photo-1516442719524-a603408c90cb?auto=format&fit=crop&w=600&q=80" alt="AI in Cyber Defense" class="news-image">
+            <div class="news-content">
+              <div class="news-date">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.0799 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Today, 8:30 AM
+              </div>
+              <h4 class="news-title">AI in Cyber Defense: NATO Deploys New Tech</h4>
+              <p class="news-excerpt">Allied forces unveil AI-driven cybersecurity defense systems to counter digital warfare.</p>
+              <a href="#" class="news-link">
+                Read more
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="news-card animate__animated animate__fadeIn animate-delay-6">
+            <img src="https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?auto=format&fit=crop&w=600&q=80" alt="Conflict Zone Update" class="news-image">
+            <div class="news-content">
+              <div class="news-date">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.0799 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Yesterday, 4:15 PM
+              </div>
+              <h4 class="news-title">Conflict Zone Update: South Sea Dispute</h4>
+              <p class="news-excerpt">Satellite imagery shows increased naval presence in contested waters. Tensions remain high.</p>
+              <a href="#" class="news-link">
+                Read more
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+          <div class="news-card animate__animated animate__fadeIn animate-delay-7">
+            <img src="https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=600&q=80" alt="Cyberattack Traced" class="news-image">
+            <div class="news-content">
+              <div class="news-date">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M3 9H21M7 3V5M17 3V5M6 13H8M6 17H8M11 13H13M11 17H13M16 13H18M16 17H18M6.2 21H17.8C18.9201 21 19.4802 21 19.908 20.782C20.2843 20.5903 20.5903 20.2843 20.782 19.908C21 19.4802 21 18.9201 21 17.8V8.2C21 7.0799 21 6.51984 20.782 6.09202C20.5903 5.71569 20.2843 5.40973 19.908 5.21799C19.4802 5 18.9201 5 17.8 5H6.2C5.0799 5 4.51984 5 4.09202 5.21799C3.71569 5.40973 3.40973 5.71569 3.21799 6.09202C3 6.51984 3 7.07989 3 8.2V17.8C3 18.9201 3 19.4802 3.21799 19.908C3.40973 20.2843 3.71569 20.5903 4.09202 20.782C4.51984 21 5.07989 21 6.2 21Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Yesterday, 11:20 AM
+              </div>
+              <h4 class="news-title">Cyberattack Traced to Major Botnet</h4>
+              <p class="news-excerpt">A coordinated cyberattack on defense networks was traced back to a new AI-powered botnet.</p>
+              <a href="#" class="news-link">
+                Read more
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="right-sidebar">
+      <!-- Poll Widget -->
+      <div class="widget animate__animated animate__fadeInRight">
+        <div class="widget-header">
+          <h3 class="widget-title">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 8C19.6569 8 21 6.65685 21 5C21 3.34315 19.6569 2 18 2C16.3431 2 15 3.34315 15 5C15 6.65685 16.3431 8 18 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 15C7.65685 15 9 13.6569 9 12C9 10.3431 7.65685 9 6 9C4.34315 9 3 10.3431 3 12C3 13.6569 4.34315 15 6 15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M18 22C19.6569 22 21 20.6569 21 19C21 17.3431 19.6569 16 18 16C16.3431 16 15 17.3431 15 19C15 20.6569 16.3431 22 18 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M8.58984 13.51L15.4198 17.49M15.4098 6.51L8.58984 10.49" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Community Poll
+          </h3>
+        </div>
+        <div class="poll-widget">
+          <h4 class="poll-question">Which conflict will escalate next?</h4>
+          <div class="poll-options">
+            <div class="poll-option">
+              <input type="radio" name="conflict_poll" id="option1" checked disabled>
+              <label for="option1">
+                <span>Eastern Border Region</span>
+                <div class="poll-meta">
+                  <span class="poll-percent">64%</span>
+                  <span class="poll-votes">1,284 votes</span>
+                </div>
+              </label>
+            </div>
+            <div class="poll-option">
+              <input type="radio" name="conflict_poll" id="option2" disabled>
+              <label for="option2">
+                <span>South Sea Dispute</span>
+                <div class="poll-meta">
+                  <span class="poll-percent">36%</span>
+                  <span class="poll-votes">723 votes</span>
+                </div>
+              </label>
+            </div>
+          </div>
+          <button class="poll-submit" disabled>Voting Coming Soon</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-about">
+        <div class="footer-logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L3 7L12 12L21 7L12 2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 12L12 17L21 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3 17L12 22L21 17" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Military Tracker
+        </div>
+        <p class="footer-about">Real-time military intelligence and defense analytics platform providing global insights into conflicts, cybersecurity, and emerging threats.</p>
+        <div class="footer-social">
+          <a href="#">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M18 2H15C13.6739 2 12.4021 2.52678 11.4645 3.46447C10.5268 4.40215 10 5.67392 10 7V10H7V14H10V22H14V14H17L18 10H14V7C14 6.73478 14.1054 6.48043 14.2929 6.29289C14.4804 6.10536 14.7348 6 15 6H18V2Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M23 3C22.0424 3.67548 20.9821 4.19211 19.86 4.53C19.2577 3.83751 18.4573 3.34669 17.567 3.12393C16.6767 2.90116 15.7395 2.9572 14.8821 3.28445C14.0247 3.61171 13.2884 4.1944 12.773 4.95372C12.2575 5.71303 11.9877 6.61234 12 7.53V8.53C10.2426 8.57557 8.50127 8.18581 6.93101 7.39545C5.36074 6.60508 4.01032 5.43864 3 4C3 4 -1 13 8 17C5.94053 18.398 3.48716 19.0989 1 19C10 24 21 19 21 7.5C20.9991 7.22145 20.9723 6.94359 20.92 6.67C21.9406 5.66349 22.6608 4.39271 23 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <a href="#">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 8C17.5913 8 19.1174 8.63214 20.2426 9.75736C21.3679 10.8826 22 12.4087 22 14V21H18V14C18 13.4696 17.7893 12.9609 17.4142 12.5858C17.0391 12.2107 16.5304 12 16 12C15.4696 12 14.9609 12.2107 14.5858 12.5858C14.2107 12.9609 14 13.4696 14 14V21H10V14C10 12.4087 10.6321 10.8826 11.7574 9.75736C12.8826 8.63214 14.4087 8 16 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 9H2V21H6V9Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 6C5.10457 6 6 5.10457 6 4C6 2.89543 5.10457 2 4 2C2.89543 2 2 2.89543 2 4C2 5.10457 2.89543 6 4 6Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-links-col">
+        <h4 class="footer-title">Resources</h4>
+        <ul class="footer-links">
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">API Access</a></li>
+          <li><a href="#">Data Sources</a></li>
+          <li><a href="#">Methodology</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4 class="footer-title">Company</h4>
+        <ul class="footer-links">
+          <li><a href="#">About Us</a></li>
+          <li><a href="#">Careers</a></li>
+          <li><a href="#">Press</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-links-col">
+        <h4 class="footer-title">Legal</h4>
+        <ul class="footer-links">
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+          <li><a href="#">Cookie Policy</a></li>
+          <li><a href="#">GDPR</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2025 Military Tracker. All rights reserved.
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Preloader
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('preloader').classList.add('hidden');
+      }, 1000);
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.querySelector('.navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Theme switcher
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const themeToggleIcon = document.getElementById('theme-toggle-icon');
+    const htmlEl = document.documentElement;
+    let darkMode = true;
+
+    function setTheme(isDark) {
+      darkMode = isDark;
+      if (!darkMode) {
+        htmlEl.classList.add('theme-light');
+        themeToggleIcon.innerHTML = `
+          <path d="M12 3C12.5523 3 13 3.44772 13 4V5C13 5.55228 12.5523 6 12 6C11.4477 6 11 5.55228 11 5V4C11 3.44772 11.4477 3 12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 18C12.5523 18 13 18.4477 13 19V20C13 20.5523 12.5523 21 12 21C11.4477 21 11 20.5523 11 20V19C11 18.4477 11.4477 18 12 18Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.63604 5.63604C6.02656 5.24552 6.02656 4.61235 5.63604 4.22183C5.24552 3.83131 4.61235 3.83131 4.22183 4.22183L3.51472 4.92893C3.1242 5.31946 3.1242 5.95262 3.51472 6.34315C3.90525 6.73367 4.53841 6.73367 4.92893 6.34315L5.63604 5.63604Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.364 18.364C18.7545 18.7545 18.7545 19.3877 18.364 19.7782C17.9734 20.1687 17.3403 20.1687 16.9497 19.7782L16.2426 19.0711C15.8521 18.6805 15.8521 18.0474 16.2426 17.6569C16.6332 17.2663 17.2663 17.2663 17.6569 17.6569L18.364 18.364Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M3 12C3 11.4477 3.44772 11 4 12L5 12C5.55228 12 6 12.4477 6 13C6 13.5523 5.55228 14 5 14H4C3.44772 14 3 13.5523 3 13V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18 12C18.5523 12 19 12.4477 19 13V14C19 14.5523 18.5523 15 18 15H17C16.4477 15 16 14.5523 16 14C16 13.4477 16.4477 13 17 13L18 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M5.63604 18.364C5.24552 17.9734 5.24552 17.3403 5.63604 16.9497L6.34315 16.2426C6.73367 15.8521 7.36684 15.8521 7.75736 16.2426C8.14789 16.6332 8.14789 17.2663 7.75736 17.6569L7.05025 18.364C6.65973 18.7545 6.02656 18.7545 5.63604 18.364Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.364 5.63604C18.7545 6.02656 18.7545 6.65973 18.364 7.05025L17.6569 7.75736C17.2663 8.14789 16.6332 8.14789 16.2426 7.75736C15.8521 7.36684 15.8521 6.73367 16.2426 6.34315L16.9497 5.63604C17.3403 5.24552 17.9734 5.24552 18.364 5.63604Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        `;
+      } else {
+        htmlEl.classList.remove('theme-light');
+        themeToggleIcon.innerHTML = `
+          <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 2V4M12 20V2M4 12H2m20 0h-2M6.343 6.343L5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        `;
+      }
+      localStorage.setItem('darkMode', darkMode);
+    }
+
+    function toggleTheme() {
+      setTheme(!darkMode);
+    }
+
+    themeToggleBtn.addEventListener('click', toggleTheme);
+
+    // Check for saved theme preference
+    if (localStorage.getItem('darkMode') === 'false') {
+      setTheme(false);
+    } else {
+      setTheme(true);
+    }
+
+    // Animate elements when they come into view
+    const animateOnScroll = function() {
+      const elements = document.querySelectorAll('.widget, .stat-card, .feature-card, .news-card');
+      
+      elements.forEach(element => {
+        const elementPosition = element.getBoundingClientRect().top;
+        const screenPosition = window.innerHeight / 1.2;
+        
+        if (elementPosition < screenPosition) {
+          element.classList.add('animate__animated', 'animate__fadeInUp');
+        }
+      });
+    };
+
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run once on page load
+  </script>
+</body>
+</html>
