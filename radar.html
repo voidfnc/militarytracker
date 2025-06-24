@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Radar - Military Tracker Dashboard</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <!-- Fonts & Favicon -->
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Fira+Mono:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🛰️</text></svg>">
+  <style>
+    :root {
+      --react-blue: #1e293b;
+      --react-blue-light: #3baee7;
+      --react-blue-dark: #0f172a;
+      --react-purple: #7c3aed;
+      --react-green: #22c55e;
+      --react-accent: #eab308;
+      --react-bg: #0b1120;
+      --surface: #1e2130;
+      --surface-light: #23263a;
+      --surface-hover: #e8effd;
+      --text: #e2e8f0;
+      --text-muted: #7f8fa3;
+      --mono: 'Fira Mono', 'JetBrains Mono', monospace;
+      --ui: 'Montserrat', 'Inter', Arial, sans-serif;
+      --border: #29304c;
+      --radius-lg: 18px;
+      --radius: 9px;
+      --card-shadow: 0 4px 32px 0 rgba(30,41,59,0.19);
+      --transition: 0.21s cubic-bezier(.5,.1,.18,1.1);
+    }
+    .theme-light {
+      --react-bg: #f7faff;
+      --surface: #fff;
+      --surface-light: #f0f4fa;
+      --surface-hover: #e8effd;
+      --text: #1e293b;
+      --text-muted: #6c7a8c;
+      --border: #c9d3e6;
+    }
+    html, body {
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+      font-family: var(--ui);
+      font-weight: 400;
+      background: var(--react-bg);
+      color: var(--text);
+      font-size: 17px;
+      transition: background var(--transition), color var(--transition);
+      -webkit-font-smoothing: antialiased;
+      letter-spacing: .01em;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    * { box-sizing: border-box; }
+    nav {
+      background: var(--surface);
+      box-shadow: var(--card-shadow);
+      border-bottom: 1.5px solid var(--border);
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 2vw 0.7rem 2vw;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      animation: fadeIn .7s;
+      flex-wrap: wrap;
+    }
+    .nav-brand {
+      font-family: var(--ui);
+      font-weight: 900;
+      font-size: 2.1rem;
+      color: var(--react-blue-light);
+      letter-spacing: 0.07em;
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+      min-width: 0;
+      flex-shrink: 1;
+      word-break: break-word;
+    }
+    .nav-brand span {
+      font-size: 1.1rem;
+      background: var(--react-purple);
+      color: #fff;
+      border-radius: 11px;
+      padding: .12em .8em;
+      font-weight: 700;
+      margin-left: .6em;
+      box-shadow: 0 2px 8px #7c3aed55;
+      letter-spacing: 0.11em;
+      word-break: break-word;
+    }
+    .nav-links {
+      display: flex;
+      gap: .5em;
+      align-items: center;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      flex-wrap: wrap;
+    }
+    .nav-links li {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 1.04rem;
+      border-radius: 14px;
+      padding: .53em 1.1em;
+      transition: background var(--transition), color var(--transition);
+      cursor: pointer;
+      margin: 0 .1em;
+      font-family: var(--ui);
+      white-space: nowrap;
+    }
+    .nav-links li.active,
+    .nav-links li:focus,
+    .nav-links li:hover {
+      background: var(--react-purple);
+      color: #fff;
+    }
+    .theme-toggle-btn {
+      background: var(--surface-light);
+      color: var(--react-blue-light);
+      border: 2px solid var(--react-blue-light);
+      border-radius: 50%;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.14rem;
+      margin-left: 1.2em;
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition), border var(--transition);
+      flex-shrink: 0;
+    }
+    .theme-toggle-btn:active { transform: scale(0.92);}
+    .theme-toggle-btn:hover, .theme-toggle-btn:focus {
+      background: var(--react-blue-light);
+      color: var(--surface);
+      border: 2px solid var(--react-purple);
+    }
+    .radar-header {
+      width: 100%;
+      background: var(--surface);
+      border-bottom: 1.5px solid var(--border);
+      box-shadow: var(--card-shadow);
+      padding: 2.1rem 2vw 1.25rem 2vw;
+      border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+      font-family: var(--ui);
+      margin-bottom: 1.1rem;
+      position: relative;
+      overflow: hidden;
+      animation: fadeIn 1.1s;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      min-width: 0;
+      box-sizing: border-box;
+    }
+    .radar-header:before {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      width: 250px; height: 100px;
+      background: radial-gradient(ellipse 60% 50% at 80% 30%, #3baee744 0%, transparent 100%);
+      filter: blur(8px);
+      opacity: 0.19;
+      pointer-events: none;
+      z-index: 1;
+    }
+    .radar-title {
+      font-size: 2.15rem;
+      font-weight: 900;
+      color: var(--react-blue-light);
+      letter-spacing: 1.18px;
+      margin-bottom: .37rem;
+      text-shadow: 0 2px 18px #3baee733;
+      font-family: var(--ui);
+      position: relative;
+      z-index: 2;
+      word-break: break-word;
+      line-height: 1.15;
+      max-width: 100%;
+    }
+    .radar-subtitle {
+      color: var(--text-muted);
+      font-size: 1.13rem;
+      font-weight: 500;
+      letter-spacing: .01em;
+      z-index: 2;
+      position: relative;
+      line-height: 1.3;
+      word-break: break-word;
+      max-width: 100%;
+    }
+    .radar-main-area {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 2vw;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .radar-card {
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--card-shadow);
+      border: 1.5px solid var(--border);
+      padding: 2rem 1.6rem 1.6rem 1.6rem;
+      margin-bottom: 2rem;
+      animation: fadeIn 1s;
+    }
+    .radar-section-title {
+      font-size: 1.13rem;
+      font-weight: 800;
+      color: var(--react-blue-light);
+      border-left: 6px solid var(--react-purple);
+      padding-left: 1rem;
+      margin-bottom: 1.1rem;
+      letter-spacing: 0.08em;
+      font-family: var(--ui);
+      background: linear-gradient(90deg, #3baee71a 0%, transparent 100%);
+      border-radius: 0 1.2em 1.2em 0;
+      box-shadow: 0 2px 18px 0 #3baee709;
+    }
+    .radar-map-container {
+      width: 100%;
+      min-height: 520px;
+      height: 65vh;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 2px solid var(--react-blue-light);
+      box-shadow: 0 4px 24px 0 #3baee714;
+      background: #222736;
+      position: relative;
+      transition: border var(--transition);
+      margin-bottom: 1.1rem;
+      display: flex;
+      align-items: stretch;
+      justify-content: stretch;
+    }
+    .radar-map-credits {
+      font-size: .92rem;
+      color: var(--text-muted);
+      margin-top: .5em;
+      text-align: right;
+      font-family: var(--ui);
+    }
+    .radar-info {
+      color: var(--react-blue-light);
+      background: var(--surface-light);
+      border-radius: var(--radius);
+      padding: 1.2em 1.3em;
+      font-size: 1.05rem;
+      font-family: var(--ui);
+      margin-bottom: 1.6em;
+      box-shadow: 0 2px 12px #3baee70d;
+      border-left: 6px solid var(--react-purple);
+      animation: fadeIn 1.2s;
+    }
+    .radar-iframe-fallback {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      color: var(--text-muted);
+      font-size: 1.09rem;
+      font-family: var(--ui);
+      background: var(--surface-light);
+      text-align: center;
+      padding: 2em 1em;
+    }
+    .radar-fallback-btn {
+      margin-top: 1.5em;
+      background: var(--react-blue-light);
+      color: #fff;
+      border: none;
+      font-family: var(--ui);
+      font-weight: 700;
+      padding: .7em 1.5em;
+      border-radius: 10px;
+      font-size: 1.09rem;
+      cursor: pointer;
+      box-shadow: 0 2px 12px #3baee70d;
+      transition: background .18s, color .18s;
+    }
+    .radar-fallback-btn:hover {
+      background: var(--react-purple);
+      color: #fff;
+    }
+
+    /* Footer Style - Match index.html */
+    footer {
+      background: transparent;
+      color: var(--text-muted);
+      padding: 1.3rem 0 .9rem 0;
+      text-align: center;
+      font-size: .97rem;
+      margin-top: 1.2rem;
+      border-top: 1.5px solid var(--border);
+      z-index: 2;
+      position: relative;
+      font-family: var(--ui);
+      animation: fadeIn 1.3s;
+    }
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: .8rem;
+      margin-bottom: 0.2rem;
+      flex-wrap: wrap;
+      font-size: .98rem;
+      font-weight: 600;
+    }
+    .footer-links a {
+      color: var(--react-blue-light);
+      text-decoration: none;
+      transition: color .2s;
+      border-radius: 10px;
+      padding: .12em .6em;
+    }
+    .footer-links a:hover {
+      color: var(--react-purple);
+      text-decoration: underline;
+      background: #3baee722;
+    }
+
+    @keyframes fadeIn {
+      from{ opacity:0; transform: translateY(26px);}
+      to{ opacity:1; transform: translateY(0);}
+    }
+    @media (max-width: 900px) {
+      .radar-header, .radar-card {padding: 1.2rem .7rem;}
+      .radar-main-area {padding: .7rem .2rem;}
+      .radar-map-container {min-height: 340px;}
+      .radar-title {font-size: 1.5rem;}
+      .radar-subtitle {font-size: 1rem;}
+    }
+    @media (max-width: 600px) {
+      .radar-header, .radar-card {padding: .7rem .2rem;}
+      .radar-map-container {min-height: 180px;}
+      .radar-title {font-size: 1.13rem;}
+      .radar-subtitle {font-size: 0.94rem;}
+      nav {flex-direction: column; align-items: stretch;}
+      .nav-brand {font-size: 1.23rem;}
+      .nav-links {flex-wrap: wrap; justify-content: center;}
+      .nav-links li {padding: .45em .7em; font-size: 0.96rem;}
+      .footer-links {gap: .5rem;}
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-brand">
+      Military Tracker <span>DASHBOARD</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html" style="color:inherit;text-decoration:none;">Dashboard</a></li>
+      <li><a href="news.html" style="color:inherit;text-decoration:none;">News</a></li>
+      <li class="active">Radar</li>
+      <li><a href="trends.html" style="color:inherit;text-decoration:none;">Trends</a></li>
+      <li><a href="polls.html" style="color:inherit;text-decoration:none;">Polls</a></li>
+      <li><a href="about.html" style="color:inherit;text-decoration:none;">About</a></li>
+      <li>
+        <button class="theme-toggle-btn" id="theme-toggle-btn" aria-label="Toggle theme">
+          <svg id="theme-toggle-icon" width="22" height="22" fill="none" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
+            <path d="M12 2V4M12 20v2M4 12H2m20 0h-2M6.343 6.343 5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293"
+              stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+  <header class="radar-header">
+    <h1 class="radar-title">Live Aircraft Radar</h1>
+    <div class="radar-subtitle">
+      Real-Time Tracking of Military &amp; Civilian Aircraft Worldwide
+    </div>
+  </header>
+  <main>
+    <div class="radar-main-area">
+      <div class="radar-card">
+        <div class="radar-section-title">Live Radar Map</div>
+        <div class="radar-info">
+          <strong>How this works:</strong>
+          <br>
+          The map below uses the <b>ADSBExchange</b> public map to provide near real-time tracking of aircraft worldwide, including military and civilian flights. <br>
+          <span style="color:var(--text-muted);font-size:0.98em;">If the map fails to load due to browser or provider restrictions, click the button below to open the radar in a new tab.</span>
+        </div>
+        <!-- LIVE AIRCRAFT RADAR EMBED -->
+        <div class="radar-map-container" id="radar-map-container">
+          <iframe
+            id="adsbexchange-embed"
+            src="https://globe.adsbexchange.com/?hideSidebar"
+            style="width:100%;height:100%;border:none;min-height:520px;display:block"
+            allowfullscreen
+            loading="lazy"
+            title="ADSBExchange Global Aircraft Live Map"
+            onerror="this.style.display='none';document.getElementById('radar-fallback').style.display='flex';"
+          ></iframe>
+          <div id="radar-fallback" class="radar-iframe-fallback" style="display:none;">
+            <div>
+              <strong>Map failed to load or is blocked.</strong>
+              <br>
+              <span>
+                Some aircraft data providers block embedding on external sites.<br>
+                <b>Click the button below to open the live radar in a new tab.</b>
+              </span>
+              <br>
+              <a class="radar-fallback-btn" href="https://globe.adsbexchange.com/" target="_blank">Open Live Radar</a>
+            </div>
+          </div>
+        </div>
+        <div class="radar-map-credits">
+          Data &amp; Map via <a href="https://globe.adsbexchange.com/" style="color:var(--react-blue-light);" target="_blank" rel="noopener">ADSBExchange</a>
+        </div>
+      </div>
+    </div>
+  </main>
+  <footer>
+    <div class="footer-links">
+      <a href="index.html">Dashboard</a>
+      <a href="#">Disclaimer</a>
+      <a href="#">Contact</a>
+      <a href="https://github.com/" target="_blank" rel="noopener noreferrer">GitHub</a>
+    </div>
+    <div>
+      &copy; 2025 Military Tracker. All rights reserved.
+    </div>
+  </footer>
+  <script>
+    // Fallback for iframe block (in case onerror isn't triggered)
+    window.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        var iframe = document.getElementById('adsbexchange-embed');
+        if (iframe && (!iframe.contentWindow || (iframe.contentDocument && iframe.contentDocument.body.innerHTML.includes("refused")))) {
+          iframe.style.display = "none";
+          document.getElementById('radar-fallback').style.display = 'flex';
+        }
+      }, 3000);
+    });
+
+    // Theme Toggle (reuse from index.html, robust and system-aware)
+    (function() {
+      const themeBtn = document.getElementById("theme-toggle-btn");
+      const themeIcon = document.getElementById("theme-toggle-icon");
+      function setTheme(mode) {
+        if (mode === "light") {
+          document.documentElement.classList.add("theme-light");
+          themeIcon.innerHTML = '<circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M17.657 6.343A8 8 0 1 1 6.343 17.657" stroke="currentColor" stroke-width="2"/>';
+        } else {
+          document.documentElement.classList.remove("theme-light");
+          themeIcon.innerHTML = '<circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/><path d="M12 2V4M12 20v2M4 12H2m20 0h-2M6.343 6.343 5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2"/>';
+        }
+        localStorage.setItem("theme", mode);
+      }
+      function getInitialTheme() {
+        const stored = localStorage.getItem("theme");
+        if (stored) return stored;
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+          return "light";
+        }
+        return "dark";
+      }
+      let theme = getInitialTheme();
+      setTheme(theme);
+      themeBtn.addEventListener("click", function() {
+        theme = document.documentElement.classList.contains("theme-light") ? "dark" : "light";
+        setTheme(theme);
+      });
+      window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', function(e) {
+        if (!localStorage.getItem("theme")) {
+          setTheme(e.matches ? "light" : "dark");
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
