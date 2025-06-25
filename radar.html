@@ -139,7 +139,7 @@
     /* --- Navbar --- */
     .navbar {
       position: fixed;
-      top: 0;
+      top: 30px;
       left: 0;
       width: 100%;
       background: var(--glass-bg);
@@ -148,7 +148,7 @@
       border-bottom: 1px solid var(--glass-border);
       padding: 1rem 0;
       z-index: 1000;
-      transition: all 0.3s var(--transition-smooth);
+      transition: padding 0.3s var(--transition-smooth), box-shadow 0.3s var(--transition-smooth);
     }
     
     .navbar.scrolled {
@@ -216,7 +216,7 @@
 
     /* --- Radar Header --- */
     .radar-header {
-      padding: 7rem 2rem 3rem;
+      padding-top: 8rem;
       background: linear-gradient(135deg, var(--cosmic-blue) 0%, var(--deep-space) 100%);
       position: relative;
       overflow: hidden;
@@ -713,7 +713,7 @@
             <button class="theme-toggle-btn" id="theme-toggle-btn">
               <svg id="theme-toggle-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
-                <path d="M12 2V4M12 20V2M4 12H2m20 0h-2M6.343 6.343L5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                <path d="M12 2V4M12 20V2M4 12H2m20 0h-2M6.343 6.343L5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </button>
           </li>
@@ -896,7 +896,7 @@
         htmlEl.classList.remove('theme-light');
         themeToggleIcon.innerHTML = `
           <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
-          <path d="M12 2V4M12 20V2M4 12H2m20 0h-2M6.343 6.343L5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+          <path d="M12 2V4M12 20V2M4 12H2m20 0h-2M6.343 6.343L5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         `;
       }
       localStorage.setItem('darkMode', darkMode);
