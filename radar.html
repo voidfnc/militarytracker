@@ -406,6 +406,72 @@
       height: 1rem;
     }
 
+    /* --- News Carousel --- */
+    .news-carousel-container {
+      max-width: 100vw;
+      margin: 2rem auto 1rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      padding-bottom: 0.5rem;
+    }
+    .news-carousel {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-behavior: smooth;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+      min-height: 70px;
+      box-sizing: border-box;
+    }
+    .carousel-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 240px;
+      max-width: 320px;
+      margin: 0;
+      padding: 0.5rem 1rem;
+      background: rgba(30,41,59,0.85);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 1rem;
+      color: var(--starlight);
+      transition: box-shadow 0.2s;
+    }
+    .carousel-item:hover {
+      box-shadow: 0 4px 16px rgba(59,130,246,0.15);
+    }
+    .carousel-link {
+      color: var(--quantum-accent);
+      font-weight: 600;
+      text-decoration: none;
+      display: block;
+      transition: color 0.2s;
+    }
+    .carousel-link:hover {
+      color: var(--plasma-accent);
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .carousel-item {
+        min-width: 180px;
+        max-width: 90vw;
+        font-size: 0.95rem;
+        padding: 0.5rem 0.5rem;
+      }
+      .news-carousel {
+        gap: 0.5rem;
+        padding: 0.5rem 0.25rem;
+      }
+    }
+
     /* --- Footer --- */
     .footer {
       background: var(--cosmic-blue);
@@ -773,6 +839,12 @@
         Data &amp; Map via <a href="https://globe.adsbexchange.com/" target="_blank" rel="noopener">ADSBExchange</a>
       </div>
     </div>
+
+    <!-- News Carousel (Auto-Scrolling) -->
+    <div class="news-carousel-container" style="max-width:600px;margin:2rem auto 1rem;">
+      <div id="news-carousel" class="news-carousel" style="overflow:hidden;white-space:nowrap;background:var(--glass-bg);border-radius:12px;padding:0.5rem 0;min-height:70px;"></div>
+    </div>
+    <!-- End News Carousel -->
   </main>
 
   <!-- Footer -->
@@ -842,95 +914,6 @@
   </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-    // Preloader
-    window.addEventListener('load', function() {
-      setTimeout(function() {
-        document.getElementById('preloader').classList.add('hidden');
-      }, 1000);
-    });
-
-    // Navbar scroll effect
-    window.addEventListener('scroll', function() {
-      const navbar = document.querySelector('.navbar');
-      if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
-    });
-
-    // Fallback for iframe block (in case onerror isn't triggered)
-    window.addEventListener('DOMContentLoaded', function() {
-      setTimeout(function() {
-        var iframe = document.getElementById('adsbexchange-embed');
-        if (iframe && (!iframe.contentWindow || (iframe.contentDocument && iframe.contentDocument.body.innerHTML.includes("refused")))) {
-          iframe.style.display = "none";
-          document.getElementById('radar-fallback').style.display = 'flex';
-        }
-      }, 3000);
-    });
-
-    // Theme switcher
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    const themeToggleIcon = document.getElementById('theme-toggle-icon');
-    const htmlEl = document.documentElement;
-    let darkMode = true;
-
-    function setTheme(isDark) {
-      darkMode = isDark;
-      if (!darkMode) {
-        htmlEl.classList.add('theme-light');
-        themeToggleIcon.innerHTML = `
-          <path d="M12 3C12.5523 3 13 3.44772 13 4V5C13 5.55228 12.5523 6 12 6C11.4477 6 11 5.55228 11 5V4C11 3.44772 11.4477 3 12 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 18C12.5523 18 13 18.4477 13 19V20C13 20.5523 12.5523 21 12 21C11.4477 21 11 20.5523 11 20V19C11 18.4477 11.4477 18 12 18Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M5.63604 5.63604C6.02656 5.24552 6.02656 4.61235 5.63604 4.22183C5.24552 3.83131 4.61235 3.83131 4.22183 4.22183L3.51472 4.92893C3.1242 5.31946 3.1242 5.95262 3.51472 6.34315C3.90525 6.73367 4.53841 6.73367 4.92893 6.34315L5.63604 5.63604Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18.364 18.364C18.7545 18.7545 18.7545 19.3877 18.364 19.7782C17.9734 20.1687 17.3403 20.1687 16.9497 19.7782L16.2426 19.0711C15.8521 18.6805 15.8521 18.0474 16.2426 17.6569C16.6332 17.2663 17.2663 17.2663 17.6569 17.6569L18.364 18.364Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M3 12C3 11.4477 3.44772 11 4 12L5 12C5.55228 12 6 12.4477 6 13C6 13.5523 5.55228 14 5 14H4C3.44772 14 3 13.5523 3 13V12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18 12C18.5523 12 19 12.4477 19 13V14C19 14.5523 18.5523 15 18 15H17C16.4477 15 16 14.5523 16 14C16 13.4477 16.4477 13 17 13L18 12Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M5.63604 18.364C5.24552 17.9734 5.24552 17.3403 5.63604 16.9497L6.34315 16.2426C6.73367 15.8521 7.36684 15.8521 7.75736 16.2426C8.14789 16.6332 8.14789 17.2663 7.75736 17.6569L7.05025 18.364C6.65973 18.7545 6.02656 18.7545 5.63604 18.364Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M18.364 5.63604C18.7545 6.02656 18.7545 6.65973 18.364 7.05025L17.6569 7.75736C17.2663 8.14789 16.6332 8.14789 16.2426 7.75736C15.8521 7.36684 15.8521 6.73367 16.2426 6.34315L16.9497 5.63604C17.3403 5.24552 17.9734 5.24552 18.364 5.63604Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M12 8C9.79086 8 8 9.79086 8 12C8 14.2091 9.79086 16 12 16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        `;
-      } else {
-        htmlEl.classList.remove('theme-light');
-        themeToggleIcon.innerHTML = `
-          <circle cx="12" cy="12" r="5" stroke="currentColor" stroke-width="2"/>
-          <path d="M12 2V4M12 20V2M4 12H2m20 0h-2M6.343 6.343L5.05 5.05M18.95 18.95l-1.293-1.293M6.343 17.657l-1.293 1.293M18.95 5.05l-1.293 1.293" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        `;
-      }
-      localStorage.setItem('darkMode', darkMode);
-    }
-
-    function toggleTheme() {
-      setTheme(!darkMode);
-    }
-
-    themeToggleBtn.addEventListener('click', toggleTheme);
-
-    // Check for saved theme preference
-    if (localStorage.getItem('darkMode') === 'false') {
-      setTheme(false);
-    } else {
-      setTheme(true);
-    }
-
-    // Animate elements when they come into view
-    const animateOnScroll = function() {
-      const elements = document.querySelectorAll('.radar-widget, .radar-info');
-      
-      elements.forEach(element => {
-        const elementPosition = element.getBoundingClientRect().top;
-        const screenPosition = window.innerHeight / 1.2;
-        
-        if (elementPosition < screenPosition) {
-          element.classList.add('animate__animated', 'animate__fadeInUp');
-        }
-      });
-    };
-
-    window.addEventListener('scroll', animateOnScroll);
-    animateOnScroll(); // Run once on page load
-  </script>
+  <script src="assets/js/radar.js"></script>
 </body>
 </html>
