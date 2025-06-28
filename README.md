@@ -22,6 +22,24 @@ Our mission: a beautiful, responsive dashboard for conflict monitoring, military
 
 ---
 
+## 🏳️ Open Source & Maintenance Status
+
+**This project is now open source and no longer under active development.**
+
+- The repository will remain available for reference, learning, and further community contributions.
+- Issues and pull requests are welcome, but responses may be delayed.
+- All sensitive information (API keys, passwords, server IPs) has been removed or replaced with placeholders.  
+  **If you fork or deploy this project, review all configuration and replace placeholders with your own credentials.**
+
+---
+
+## 🛡️ Security
+
+- If you find any secrets or sensitive data in the codebase, please report it via a GitHub issue or pull request.
+- Always use your own secure API keys, tokens, and environment variables in your deployments.
+
+---
+
 ## 🖼️ Screenshots
 
 <!-- Add screenshots here: dashboard, radar, mobile view, etc. -->
@@ -45,7 +63,7 @@ Our mission: a beautiful, responsive dashboard for conflict monitoring, military
 
 ---
 
-## 🛣️ Planned Features
+## 🛠️ Planned Features (Future Community Contributions)
 
 - 🗺️ Live conflict data map overlays
 - ✈️ Real-time military aircraft tracker integration (with backend APIs)
@@ -66,7 +84,7 @@ Contributions are welcome! Please open issues or pull requests as we expand the 
 
 ---
 
-## 📜 License
+## 📝 License
 
 [MIT License](LICENSE)
 
@@ -76,4 +94,5 @@ Contributions are welcome! Please open issues or pull requests as we expand the 
 
 voidfnc (Me) with assisted AI LLMs 🤖
 
-> _Military Tracker is under active development and not yet launched. All data is for demonstration purposes only._
+> _Military Tracker is now open source and is no longer actively maintained. All data is for demonstration purposes only._
+> _For production use, review/replace any placeholder values and configure your own secure credentials as needed._
