@@ -92,7 +92,7 @@ Contributions are welcome! Please open issues or pull requests as we expand the 
 
 ## 👨‍💻 Author
 
-voidfnc (Me) with assisted AI LLMs 🤖
+voidfnc (Me) with assisted AI LLMs / Models 🤖
 
 > _Military Tracker is now open source and is no longer actively maintained. All data is for demonstration purposes only._
 > _For production use, review/replace any placeholder values and configure your own secure credentials as needed._
